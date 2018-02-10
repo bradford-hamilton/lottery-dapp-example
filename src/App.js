@@ -16,6 +16,7 @@ class App extends Component {
     };
 
     this.onSubmit = this.onSubmit.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   async componentDidMount() {
@@ -41,6 +42,16 @@ class App extends Component {
     this.setState({ message: 'You\'ve been successfully entered into the lottery!' });
   }
 
+  async onClick() {
+    const accounts = await web3.eth.getAccounts();
+
+    this.setState({ message: 'Please hold while transaction is proccessed.' });
+
+    await lottery.methods.selectWinner().send({ from: accounts[0] });
+
+    this.setState({ message: 'The tribe has spoken!' });
+  }
+
   render() {
     return (
       <div>
@@ -63,6 +74,9 @@ class App extends Component {
           </div>
           <button>Enter Now</button>
         </form>
+        <hr/>
+        <h4>Ready to choose a winner?</h4>
+        <button onClick={this.onClick}>Make it rain</button>
         <hr/>
         <h1>{this.state.message}</h1>
       </div>
